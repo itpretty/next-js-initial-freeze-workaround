@@ -1,9 +1,8 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { gql, useMutation } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
+import useSWR  from 'swr'
 
 const SignUpMutation = gql`
   mutation SignUpMutation($email: String!, $password: String!) {
@@ -16,10 +15,14 @@ const SignUpMutation = gql`
   }
 `
 
-function SignUp() {
+function SignUp({globalConst, router, Link, useState, useEffect, useStore}) {
   const [signUp] = useMutation(SignUpMutation)
   const [errorMsg, setErrorMsg] = useState()
-  const router = useRouter()
+
+  const { getStore, setStore } = useStore()
+  useEffect(()=>{
+    setStore({signup: true})
+  }, [])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -64,8 +67,36 @@ function SignUp() {
           <a>Sign in</a>
         </Link>
       </form>
+      {ef.frontend}<br />
+      {globalConst}<br />
+      {ef.frontend}
+      {console.log('Forntend prints: '+ ef.common)}
     </>
   )
+}
+
+export async function getStaticProps() {
+  const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  const json = await res.json()
+  // console.log('server side: ', ef.common)
+
+  ef.request
+  .get('https://api.github.com/repos/itpretty/ant-design-pro')
+  .then(function(response) {
+    console.log(JSON.stringify(response?.parent?.owner,null,4))
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+
+  {console.log('Backend prints: '+ ef.common)}
+
+  return {
+    props: {
+      stars: json.stargazers_count,
+      globalConst: ef.common
+    },
+  }
 }
 
 export default SignUp

@@ -13,10 +13,13 @@
     "cookie": "^0.4.1",
     "deepmerge": "4.2.2",
     "graphql": "^14.0.2",
+    "immutable": "^4.0.0-rc.15",
     "next": "latest",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "swr": "^1.0.1",
+    "umi-request": "^1.4.0",
     "uuid": "8.1.0"
   },
   "license": "MIT"

@@ -1,10 +1,8 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { gql } from '@apollo/client'
 import { useMutation, useApolloClient } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
+// import useSWR  from 'swr'
 
 const SignInMutation = gql`
   mutation SignInMutation($email: String!, $password: String!) {
@@ -17,11 +15,17 @@ const SignInMutation = gql`
   }
 `
 
-function SignIn() {
+function SignIn({lang, router, Link, useState, useEffect, useStore}) {
   const client = useApolloClient()
   const [signIn] = useMutation(SignInMutation)
   const [errorMsg, setErrorMsg] = useState()
-  const router = useRouter()
+  // const router = useRouter()
+  
+
+  const { getStore, setStore } = useStore()
+  useEffect(()=>{
+    setStore({signin: true})
+  }, [])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -69,6 +73,7 @@ function SignIn() {
           <a>Sign up</a>
         </Link>
       </form>
+      {console.log('Forntend prints: '+ ef.common)}
     </>
   )
 }
