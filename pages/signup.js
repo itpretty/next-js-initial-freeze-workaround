@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
 import useSWR  from 'swr'
+import request from '../request'
 
 const SignUpMutation = gql`
   mutation SignUpMutation($email: String!, $password: String!) {
@@ -22,7 +23,17 @@ function SignUp({globalConst, router, Link, useState, useEffect, useStore}) {
   const { getStore, setStore } = useStore()
   useEffect(()=>{
     setStore({signup: true})
+
+    request.get('/repos/itpretty/ant-design-pro')
+    .then(function(response) {
+      console.log('frontend return: '+JSON.stringify(response?.parent?.owner,null,4))
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
   }, [])
+
+
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -76,24 +87,22 @@ function SignUp({globalConst, router, Link, useState, useEffect, useStore}) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  const json = await res.json()
+  // const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  // const json = await res.json()
   // console.log('server side: ', ef.common)
 
-  ef.request
-  .get('https://api.github.com/repos/itpretty/ant-design-pro')
+  request
+  .get('/repos/itpretty/ant-design-pro')
   .then(function(response) {
-    console.log(JSON.stringify(response?.parent?.owner,null,4))
+    console.log('backend return: '+JSON.stringify(response?.parent?.owner,null,4))
   })
   .catch(function(error) {
     console.log(error);
   });
 
-  {console.log('Backend prints: '+ ef.common)}
-
   return {
     props: {
-      stars: json.stargazers_count,
+      // stars: json?.stargazers_count,
       globalConst: ef.common
     },
   }
